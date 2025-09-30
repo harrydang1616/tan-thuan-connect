@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,10 +7,10 @@ import {
   Modal,
   Animated,
   TouchableWithoutFeedback,
-  Dimensions
-} from 'react-native';
-import { PanGestureHandler, State } from 'react-native-gesture-handler';
-import { colors } from '../styles/commonStyles';
+  Dimensions,
+} from "react-native";
+import { PanGestureHandler, State } from "react-native-gesture-handler";
+import { colors } from "../styles/commonStyles";
 
 interface SimpleBottomSheetProps {
   children?: React.ReactNode;
@@ -18,7 +18,7 @@ interface SimpleBottomSheetProps {
   onClose?: () => void;
 }
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 // Snap positions for the bottom sheet
 const SNAP_POINTS = {
@@ -30,7 +30,7 @@ const SNAP_POINTS = {
 const SimpleBottomSheet: React.FC<SimpleBottomSheetProps> = ({
   children,
   isVisible = false,
-  onClose
+  onClose,
 }) => {
   const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
   const gestureTranslateY = useRef(new Animated.Value(0)).current;
@@ -95,8 +95,14 @@ const SimpleBottomSheet: React.FC<SimpleBottomSheetProps> = ({
     if (velocityY < -1000) return SNAP_POINTS.FULL;
 
     const distances = [
-      { point: SNAP_POINTS.HALF, distance: Math.abs(currentPosition - SNAP_POINTS.HALF) },
-      { point: SNAP_POINTS.FULL, distance: Math.abs(currentPosition - SNAP_POINTS.FULL) },
+      {
+        point: SNAP_POINTS.HALF,
+        distance: Math.abs(currentPosition - SNAP_POINTS.HALF),
+      },
+      {
+        point: SNAP_POINTS.FULL,
+        distance: Math.abs(currentPosition - SNAP_POINTS.FULL),
+      },
     ];
 
     if (currentPosition < SNAP_POINTS.HALF * 0.5) {
@@ -118,7 +124,10 @@ const SimpleBottomSheet: React.FC<SimpleBottomSheetProps> = ({
     const minPosition = SCREEN_HEIGHT - SNAP_POINTS.FULL;
     const maxPosition = SCREEN_HEIGHT;
 
-    const clampedPosition = Math.max(minPosition, Math.min(maxPosition, intendedPosition));
+    const clampedPosition = Math.max(
+      minPosition,
+      Math.min(maxPosition, intendedPosition)
+    );
     const clampedTranslation = clampedPosition - currentBasePosition;
 
     gestureTranslateY.setValue(clampedTranslation);
@@ -137,7 +146,10 @@ const SimpleBottomSheet: React.FC<SimpleBottomSheetProps> = ({
       const minPosition = SCREEN_HEIGHT - SNAP_POINTS.FULL;
       const maxPosition = SCREEN_HEIGHT;
 
-      const finalY = Math.max(minPosition, Math.min(maxPosition, intendedPosition));
+      const finalY = Math.max(
+        minPosition,
+        Math.min(maxPosition, intendedPosition)
+      );
       const targetSnapPoint = getClosestSnapPoint(finalY, velocityY);
 
       gestureTranslateY.setValue(0);
@@ -155,32 +167,26 @@ const SimpleBottomSheet: React.FC<SimpleBottomSheetProps> = ({
       visible={isVisible}
       transparent
       animationType="none"
-      statusBarTranslucent
-    >
+      statusBarTranslucent>
       <View style={styles.container}>
         <TouchableWithoutFeedback onPress={handleBackdropPress}>
           <Animated.View
-            style={[
-              styles.backdrop,
-              { opacity: backdropOpacity }
-            ]}
+            style={[styles.backdrop, { opacity: backdropOpacity }]}
           />
         </TouchableWithoutFeedback>
 
         <PanGestureHandler
           onGestureEvent={onGestureEvent}
-          onHandlerStateChange={onHandlerStateChange}
-        >
+          onHandlerStateChange={onHandlerStateChange}>
           <Animated.View
             style={[
               styles.bottomSheet,
               {
                 transform: [
-                  { translateY: Animated.add(translateY, gestureTranslateY) }
+                  { translateY: Animated.add(translateY, gestureTranslateY) },
                 ],
               },
-            ]}
-          >
+            ]}>
             <View style={styles.handle} />
 
             <View style={styles.contentContainer}>
@@ -188,13 +194,10 @@ const SimpleBottomSheet: React.FC<SimpleBottomSheetProps> = ({
                 <View style={styles.defaultContent}>
                   <Text style={styles.title}>Bottom Sheet 🎉</Text>
                   <Text style={styles.description}>
-                    This is a custom bottom sheet implementation.
-                    Try dragging it up and down!
+                    This is a custom bottom sheet implementation. Try dragging
+                    it up and down!
                   </Text>
-                  <Button
-                    title="Close"
-                    onPress={onClose}
-                  />
+                  <Button title="Close" onPress={onClose} />
                 </View>
               )}
             </View>
@@ -205,23 +208,23 @@ const SimpleBottomSheet: React.FC<SimpleBottomSheetProps> = ({
   );
 };
 
-SimpleBottomSheet.displayName = 'SimpleBottomSheet';
+SimpleBottomSheet.displayName = "SimpleBottomSheet";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'black',
+    backgroundColor: "black",
   },
   bottomSheet: {
     height: SNAP_POINTS.FULL,
-    backgroundColor: colors.background || '#ffffff',
+    backgroundColor: colors.background || "#ffffff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: -3,
@@ -233,9 +236,9 @@ const styles = StyleSheet.create({
   handle: {
     width: 40,
     height: 4,
-    backgroundColor: colors.grey || '#cccccc',
+    backgroundColor: colors.grey || "#cccccc",
     borderRadius: 2,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: 8,
     marginBottom: 8,
   },
@@ -245,19 +248,19 @@ const styles = StyleSheet.create({
   },
   defaultContent: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
     marginBottom: 16,
   },
   description: {
     fontSize: 16,
     color: colors.text,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
   },
 });
